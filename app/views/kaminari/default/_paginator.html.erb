@@ -1,0 +1,24 @@
+<%# app/views/kaminari/_paginator.html.erb %>
+<nav class="pagination" role="navigation" aria-label="Pagination Navigation">
+  <ul class="pagination-list flex justify-center space-x-2">
+    <% if @paginator.prev_page %>
+      <li class="pagination-previous">
+        <%= link_to raw("&laquo;"), url_for(page: @paginator.prev_page), class: "px-4 py-2 border rounded-full" %>
+      </li>
+    <% end %>
+    <% @paginator.each_page do |page| %>
+      <% if page %>
+        <li class="pagination-page <%= 'active' if page == current_page %>">
+          <%= link_to page, url_for(page: page), class: "px-4 py-2 border rounded-full <%= 'bg-blue-500 text-white' if page == current_page %>" %>
+        </li>
+      <% else %>
+        <li class="pagination-gap">…</li>
+      <% end %>
+    <% end %>
+    <% if @paginator.next_page %>
+      <li class="pagination-next">
+        <%= link_to raw("&raquo;"), url_for(page: @paginator.next_page), class: "px-4 py-2 border rounded-full" %>
+      </li>
+    <% end %>
+  </ul>
+</nav>

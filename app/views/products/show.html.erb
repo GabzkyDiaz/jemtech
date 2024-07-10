@@ -1,13 +1,47 @@
-<div class="container mx-auto px-4">
-  <div class="flex flex-wrap">
-    <div class="w-full lg:w-1/2 px-4">
-      <img src="<%= asset_path(@product.image_url) %>" alt="<%= @product.name %>" class="h-64 w-full object-cover">
-    </div>
-    <div class="w-full lg:w-1/2 px-4">
-      <h1 class="text-3xl font-bold mb-4"><%= @product.name %></h1>
-      <p class="text-gray-700 mb-4"><%= @product.description %></p>
-      <p class="text-green-500 font-semibold text-2xl mb-4"><%= number_to_currency(@product.price) %></p>
-      <%= button_to 'Add to Cart', cart_items_path(product_id: @product.id), method: :post, class: 'bg-blue-500 text-white px-4 py-2 rounded' %>
+<%# app/views/products/show.html.erb %>
+
+<div class="container mx-auto">
+  <div class="py-6">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <div class="w-full lg:w-1/2">
+        <div class="grid gap-4">
+          <div id="main-image-container">
+            <%= image_tag @product.image_url, id: 'main-image', class: 'h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]' %>
+          </div>
+          <div class="grid grid-cols-5 gap-4">
+            <% @product.products_galleries.each do |gallery| %>
+              <div>
+                <%= image_tag gallery.image_url, class: 'object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer', data: { full: gallery.image_url }, onclick: 'changeImage(this)' %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="w-full lg:w-1/2 flex flex-col justify-between">
+        <div class="pb-8 border-b border-gray-line">
+          <h1 class="text-3xl font-bold mb-4"><%= @product.name %></h1>
+          <div class="flex items-center mb-8">
+            <span>★★★★★</span>
+            <span class="ml-2">(0 Reviews)</span>
+            <a href="#" class="ml-4 text-primary font-semibold">Write a review</a>
+          </div>
+          <div class="mb-4 pb-4 border-b border-gray-line">
+            <p class="mb-2">Product code: <strong><%= @product.sku %></strong></p>
+            <p class="mb-2">Availability: <strong>In Stock</strong></p>
+          </div>
+          <div class="flex items-center mb-4">
+            <span class="text-lg font-bold text-primary"><%= number_to_currency(@product.price) %></span>
+            <% if @product.tags.include?(Tag.find_by(name: 'on_sale')) %>
+              <span class="text-sm line-through ml-2"><%= number_to_currency(@product.original_price) %></span>
+            <% end %>
+          </div>
+          <%= button_to 'Add to Cart', '#', class: 'bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full' %>
+        </div>
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold mb-4">Description</h3>
+          <p><%= @product.description %></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

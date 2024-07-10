@@ -1,39 +1,47 @@
-<div class="container mx-auto px-4">
-  <!-- Swiper Slider -->
-  <section id="product-slider">
-    <div class="main-slider swiper-container">
-      <div class="swiper-wrapper">
-        <!-- Slide 1 -->
-        <div class="swiper-slide">
-          <img src="<%= asset_path('main-slider/10.jpg') %>" alt="Product 1">
-          <div class="swiper-slide-content">
-            <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Desktop Systems</h2>
-            <p class="mb-4 text-white md:text-2xl">Unleash Unmatched Performance with Our Top-Tier Desktops.</p>
-            <a href="/" class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop now</a>
-          </div>
-        </div>
-        <!-- Slide 2 -->
-        <div class="swiper-slide">
-          <img src="<%= asset_path('main-slider/9.jpg') %>" alt="Product 2">
-          <div class="swiper-slide-content">
-            <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Laptops / Notebooks</h2>
-            <p class="mb-4 text-white md:text-2xl">Stay Connected and Productive with Our Premium Laptops.</p>
-            <a href="/" class="bg-white hover:bg-transparent text-black hover:text-white font-semibold px-4 py-2 rounded-full inline-block border border-transparent hover:border-white">Shop now</a>
-          </div>
-        </div>
-        <!-- Slide 3 -->
-        <div class="swiper-slide">
-          <img src="<%= asset_path('main-slider/12.webp') %>" alt="Product 3">
-          <div class="swiper-slide-content">
-            <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Computer Peripherals</h2>
-            <p class="mb-4 text-white md:text-2xl">Perfect Precision: Discover Our Top-Rated Keyboards and Mice.</p>
-            <a href="/" class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop now</a>
-          </div>
-        </div>
-      </div>
-      <!-- Slider Pagination -->
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
+<%# app/views/products/index.html.erb %>
+
+<div class="container mx-auto">
+  <div class="flex flex-col md:flex-row justify-between items-center py-4">
+    <div class="flex items-center space-x-4">
+      <%= link_to 'Show On Sale', products_path(filter: 'on_sale'), class: 'bg-primary text-white hover:bg-transparent hover:text-primary border hover:border-primary py-2 px-4 rounded-full focus:outline-none' %>
     </div>
-  </section>
+    <div class="flex mt-5 md:mt-0 space-x-4">
+      <%= form_with url: products_path, method: :get, local: true do %>
+        <%= select_tag :sort, options_for_select([['Sort by Latest', 'latest'], ['Sort by A-Z', 'a-z']]), class: 'block appearance-none w-full bg-white border hover:border-primary px-4 py-2 pr-8 rounded-full shadow leading-tight focus:outline-none focus:shadow-outline' %>
+        <%= submit_tag 'Sort', class: 'hidden' %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="flex flex-col md:flex-row">
+    <div id="filters" class="w-full md:w-1/4 p-4 hidden md:block">
+      <h3 class="text-lg font-semibold mb-6">Category</h3>
+      <div class="space-y-2">
+        <% @categories.each do |category| %>
+          <%= link_to category.name, products_path(category: category.id), class: 'block py-2' %>
+        <% end %>
+      </div>
+    </div>
+    <div class="w-full md:w-3/4 p-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <% @products.each do |product| %>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <%= image_tag product.image_url, class: 'w-full object-cover mb-4 rounded-lg' %>
+            <%= link_to product.name, product_path(product), class: 'text-lg font-semibold mb-2' %>
+            <p class="my-2"><%= product.category.name %></p>
+            <div class="flex items-center mb-4">
+              <span class="text-lg font-bold text-primary"><%= number_to_currency(product.price) %></span>
+              <% if product.tags.include?(Tag.find_by(name: 'on_sale')) %>
+                <span class="text-sm line-through ml-2"><%= number_to_currency(product.original_price) %></span>
+              <% end %>
+            </div>
+            <%= button_to 'Add to Cart', '#', class: 'bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full' %>
+          </div>
+        <% end %>
+      </div>
+      <div class="flex justify-center mt-8">
+        <%= paginate @products %>
+      </div>
+    </div>
+  </div>
 </div>
