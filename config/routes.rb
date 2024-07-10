@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
+  get 'pages/home'
 
-  root 'products#index'
+  root 'pages#home'
+
   resources :products, only: [:index, :show]
 
   devise_for :admin_users, ActiveAdmin::Devise.config
