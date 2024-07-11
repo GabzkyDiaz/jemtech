@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
+  before_action :set_categories, only: [:index, :show, :search]
+
   def index
-    @categories = Category.all
     @products = Product.all
 
     # Apply filters
@@ -11,12 +12,12 @@ class ProductsController < ApplicationController
 
     if params[:categories].present?
       category_ids = params[:categories].split(',')
-      @products = @products.where(category_id: category_ids)
+      @products = @products.joins(:tags).where(tags: { id: category_ids })
     end
 
     if params[:category].present?
-      category = Category.find_by(name: params[:category])
-      @products = @products.where(category_id: category.id) if category
+      category_tag = Tag.find_by(name: params[:category])
+      @products = @products.joins(:tags).where(tags: { id: category_tag.id }) if category_tag
     end
 
     if params[:updated] == 'recently_updated'
@@ -38,5 +39,22 @@ class ProductsController < ApplicationController
 
   def show
     @product = Product.find(params[:id])
+  end
+
+  def search
+    @category_tag = Tag.find_by(id: params[:category]) if params[:category].present?
+    @products = if @category_tag
+                  Product.joins(:tags).where(tags: { id: @category_tag.id }).where("products.name LIKE ? OR products.description LIKE ?", "%#{params[:keyword]}%", "%#{params[:keyword]}%")
+                else
+                  Product.where("name LIKE ? OR description LIKE ?", "%#{params[:keyword]}%", "%#{params[:keyword]}%")
+                end
+    @products = @products.page(params[:page]).per(12)
+    render :index
+  end
+
+  private
+
+  def set_categories
+    @categories = Category.all
   end
 end
