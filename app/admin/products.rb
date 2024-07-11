@@ -1,6 +1,11 @@
 ActiveAdmin.register Product do
   permit_params :name, :description, :price, :category_id, tag_ids: []
 
+  scope :all, default: true
+  scope :on_sale do |products|
+    products.joins(:tags).where(tags: { name: 'on_sale' })
+  end
+
   index do
     selectable_column
     id_column
@@ -38,20 +43,9 @@ ActiveAdmin.register Product do
     end
     active_admin_comments
   end
+
+  filter :name
+  filter :price
+  filter :category
+  filter :tags, as: :check_boxes, collection: -> { Tag.all }
 end
-
-
-  # See permitted parameters documentation:
-  # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
-  #
-  # Uncomment all parameters which should be permitted for assignment
-  #
-  # permit_params :category_id, :name, :description, :price, :stock_quantity, :sku, :image_url
-  #
-  # or
-  #
-  # permit_params do
-  #   permitted = [:category_id, :name, :description, :price, :stock_quantity, :sku, :image_url]
-  #   permitted << :other if params[:action] == 'create' && current_user.admin?
-  #   permitted
-  # end
