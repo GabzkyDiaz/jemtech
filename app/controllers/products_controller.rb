@@ -6,9 +6,9 @@ class ProductsController < ApplicationController
     if params[:filter] == 'on_sale'
       on_sale_tag = Tag.find_by(name: 'on_sale')
       @products = @products.joins(:tags).where(tags: { id: on_sale_tag.id }) if on_sale_tag
-    elsif params[:category]
-      category = Category.find_by(id: params[:category])
-      @products = @products.where(category: category) if category
+    elsif params[:categories].present?
+      category_ids = params[:categories].split(',')
+      @products = @products.where(category_id: category_ids)
     end
 
     @products = @products.order(created_at: :desc) if params[:sort] == 'latest'

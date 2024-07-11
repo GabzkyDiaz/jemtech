@@ -12,15 +12,20 @@
       <% end %>
     </div>
   </div>
-  
+
   <div class="flex flex-col md:flex-row">
-    <div id="filters" class="w-full md:w-1/4 p-4 hidden md:block">
+    <div id="filters" class="w-full md:w-1/4 p-4">
       <h3 class="text-lg font-semibold mb-6">Category</h3>
-      <div class="space-y-2">
-        <% @categories.each do |category| %>
-          <%= link_to category.name, products_path(category: category.id), class: 'block py-2' %>
-        <% end %>
-      </div>
+      <%= form_with url: products_path, method: :get, local: true, id: 'category-filter-form' do %>
+        <div class="space-y-2">
+          <% @categories.each do |category| %>
+            <label class="flex items-center">
+              <%= check_box_tag 'categories[]', category.id, params[:categories]&.include?(category.id.to_s), class: 'form-checkbox custom-checkbox', onchange: 'document.getElementById("category-filter-form").submit();' %>
+              <span class="ml-2"><%= category.name %></span>
+            </label>
+          <% end %>
+        </div>
+      <% end %>
     </div>
     <div class="w-full md:w-3/4 p-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
