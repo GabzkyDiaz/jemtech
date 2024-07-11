@@ -6,7 +6,8 @@ class ProductsController < ApplicationController
     if params[:filter] == 'on_sale'
       @products = @products.on_sale
     elsif params[:category]
-      @products = @products.where(category_id: params[:category])
+      category = Category.find_by(name: params[:category])
+      @products = @products.where(category: category) if category
     end
 
     @products = @products.order(created_at: :desc) if params[:sort] == 'latest'
