@@ -32,7 +32,9 @@
             <div class="flex items-center mb-4">
               <span class="text-lg font-bold text-primary"><%= number_to_currency(product.price) %></span>
               <% if product.tags.include?(Tag.find_by(name: 'on_sale')) %>
-                <span class="text-sm line-through ml-2"><%= number_to_currency(product.original_price) %></span>
+                <% if product.respond_to?(:original_price) && product.original_price.present? %>
+                  <span class="text-sm line-through ml-2"><%= number_to_currency(product.original_price) %></span>
+                <% end %>
               <% end %>
             </div>
             <%= button_to 'Add to Cart', '#', class: 'bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full' %>

@@ -4,9 +4,10 @@ class ProductsController < ApplicationController
     @products = Product.all
 
     if params[:filter] == 'on_sale'
-      @products = @products.on_sale
+      on_sale_tag = Tag.find_by(name: 'on_sale')
+      @products = @products.joins(:tags).where(tags: { id: on_sale_tag.id }) if on_sale_tag
     elsif params[:category]
-      category = Category.find_by(name: params[:category])
+      category = Category.find_by(id: params[:category])
       @products = @products.where(category: category) if category
     end
 
