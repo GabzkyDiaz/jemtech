@@ -7,7 +7,7 @@ class Product < ApplicationRecord
   has_many :tags, through: :product_tags
 
   scope :on_sale, -> { joins(:tags).where(tags: { name: 'on_sale' }) }
-  scope :recently_updated, -> { where('updated_at >= ? AND created_at < ?', 3.days.ago, 3.days.ago) }
+  scope :recently_updated, -> { where('updated_at >= ?', 3.days.ago) }
 
   def self.ransackable_associations(auth_object = nil)
     ["cart_items", "category", "order_items", "product_tags", "products_galleries", "tags"]
