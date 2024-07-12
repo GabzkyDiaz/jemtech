@@ -132,7 +132,9 @@
         <div id="search-field" class="hidden absolute top-full right-0 mt-2 bg-white shadow-lg p-2 rounded" style="max-width: 500px;">
           <%= form_with url: search_products_path, method: :get, local: true, class: "flex flex-wrap items-center" do %>
             <%= text_field_tag :keyword, params[:keyword], placeholder: "Search for products...", class: "flex-grow p-2 border border-gray-300 rounded", style: "min-width: 150px; padding: 10px; margin-right: 10px;" %>
-            <%= select_tag :category, options_from_collection_for_select(@categories, :id, :name, params[:category]), include_blank: "All Products", class: "p-2 border border-gray-300 rounded", style: "padding: 10px; margin-right: 10px;" %>
+            <% if @categories %>
+              <%= select_tag :category, options_from_collection_for_select(@categories, :id, :name, params[:category]), include_blank: "All Products", class: "p-2 border border-gray-300 rounded", style: "padding: 10px; margin-right: 10px;" %>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -211,7 +213,7 @@
           <p><img src="<%= asset_path('JemTech_transparent2.png') %>" alt="Logo" class="h-[60px] mb-4"></p>
           <p>316 Ross Avenue, Winnipeg, Canada</p>
           <p class="text-xl font-bold my-4">Phone: (431) 556-4625</p>
-          <a href="mailto:info@company.com" class="underline">Email: jemtech.shop@gmail.com</a>
+          <a href="mailto:jemtech.shop@gmail.com" class="underline">Email: jemtech.shop@gmail.com</a>
         </div>
       </div>
     </div>

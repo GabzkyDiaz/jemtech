@@ -60,3 +60,39 @@ import_products(keyboards_file_path, 'Keyboards & Mice')
 import_products(gaming_monitors_file_path, 'Gaming Monitors')
 import_products(desktop_systems_file_path, 'Desktop Systems')
 =end
+
+# Clear existing static pages
+StaticPage.delete_all
+
+# Seed data for About Us page
+StaticPage.create(
+  title: 'About Us',
+  content: <<-HTML
+    <p class="text-lg text-gray-600 mb-6">Welcome to Jemtech Computer Store, your premier destination for all your computer needs.</p>
+    <p class="text-lg text-gray-700 mb-6">Jemtech Computer Store is a premier technology retailer based in Winnipeg, Canada. Specializing in providing a wide array of computer products and accessories, the company has established itself as a trusted name in the local tech community due to its strong commitment to quality and customer satisfaction.</p>
+    <p class="text-lg text-gray-700 mb-6">With a team of 35 dedicated employees and over 10 years in the business, Jemtech offers an extensive selection of products including the latest laptops, keyboards, cables, and other essential computer peripherals.</p>
+    <p class="text-lg text-gray-700 mb-6">Our target demographic includes individual consumers and businesses looking for reliable computer products and accessories. Whether you are a technology enthusiast, a small to medium-sized business owner, a student, or a professional, Jemtech has the right products for you.</p>
+    <p class="text-lg text-gray-700 mb-6">Our new e-commerce platform is designed to offer an intuitive and user-friendly online shopping experience, providing detailed product descriptions and secure payment options to enhance customer satisfaction and loyalty.</p>
+    <p class="text-lg text-gray-700">Thank you for choosing Jemtech Computer Store. We look forward to serving you and meeting all your computer needs.</p>
+  HTML
+)
+
+# Seed data for Contact Us page
+StaticPage.create(
+  title: 'Contact Us',
+  content: <<-HTML
+    <p class="text-lg text-gray-600 mb-6">We'd love to hear from you! Reach out to us through any of the following methods:</p>
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-4">Office Address</h3>
+      <p class="text-lg text-gray-700">316 Ross Avenue, Winnipeg, Canada</p>
+    </div>
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-4">Phone</h3>
+      <p class="text-lg text-gray-700">(431) 556-4625</p>
+    </div>
+    <div class="mb-8">
+      <h3 class="text-lg font-semibold mb-4">Email</h3>
+      <a href="mailto:jemtech.shop@gmail.com" class="text-lg text-blue-500 underline">jemtech.shop@gmail.com</a>
+    </div>
+  HTML
+)
