@@ -1,6 +1,3 @@
-require 'faraday'
-require 'json'
-
 class Product < ApplicationRecord
   belongs_to :category
   has_many :order_items
@@ -18,15 +15,27 @@ class Product < ApplicationRecord
   validates :price, numericality: true
   validates :stock_quantity, numericality: { only_integer: true }
 
+  before_validation :set_defaults, on: :create
+
+  private
+
+  def self.ransackable_attributes(auth_object = nil)
+    ["category_id", "created_at", "description", "id", "id_value", "image_url", "name", "on_sale", "price", "sku", "stock_quantity", "updated_at"]
+  end
+
   def self.ransackable_associations(auth_object = nil)
     ["cart_items", "category", "order_items", "product_tags", "products_galleries", "tags"]
   end
 
-  def self.ransackable_attributes(auth_object = nil)
-    ["category_id", "created_at", "description", "id", "id_value", "image_url", "name", "price", "sku", "stock_quantity", "updated_at"]
+  def set_defaults
+    self.stock_quantity ||= 0
+    self.sku ||= generate_sku(name)
+    self.image_url ||= ActionController::Base.helpers.asset_path('defaultimage.png')
   end
 
-  private
+  def generate_sku(product_name)
+    "#{product_name.parameterize}-#{SecureRandom.hex(4)}"
+  end
 
   def on_sale_tagged?
     tags.exists?(name: 'on_sale')

@@ -1,15 +1,17 @@
+<%# app/views/products/show.html.erb %>
+
 <div class="container mx-auto">
   <div class="py-6">
     <div class="flex flex-col lg:flex-row gap-6">
       <div class="w-full lg:w-1/2">
         <div class="grid gap-4">
           <div id="main-image-container">
-            <%= image_tag @product.image_url, id: 'main-image', class: 'h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]' %>
+            <%= image_tag @product.image_url.present? ? @product.image_url : '/assets/defaultimage.png', id: 'main-image', class: 'h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]' %>
           </div>
           <div class="grid grid-cols-5 gap-4">
             <% @product.products_galleries.each do |gallery| %>
               <div>
-                <%= image_tag gallery.image_url, class: 'object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer', data: { full: gallery.image_url }, onclick: 'changeImage(this)' %>
+                <%= image_tag gallery.image_url.present? ? gallery.image_url : '/assets/defaultimage.png', class: 'object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer', data: { full: gallery.image_url.present? ? gallery.image_url : '/assets/defaultimage.png' }, onclick: 'changeImage(this)' %>
               </div>
             <% end %>
           </div>
