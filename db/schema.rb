@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_12_145429) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_12_195119) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -187,14 +187,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_12_145429) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cart_items", "carts"
-  add_foreign_key "cart_items", "products"
+  add_foreign_key "cart_items", "products", on_delete: :cascade
   add_foreign_key "carts", "customers"
   add_foreign_key "customers", "provinces"
   add_foreign_key "order_items", "orders"
-  add_foreign_key "order_items", "products"
+  add_foreign_key "order_items", "products", on_delete: :cascade
   add_foreign_key "orders", "customers"
-  add_foreign_key "product_tags", "products"
+  add_foreign_key "product_tags", "products", on_delete: :cascade
   add_foreign_key "product_tags", "tags"
   add_foreign_key "products", "categories"
-  add_foreign_key "products_galleries", "products"
+  add_foreign_key "products_galleries", "products", on_delete: :cascade
 end
