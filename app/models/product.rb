@@ -14,6 +14,10 @@ class Product < ApplicationRecord
 
   after_save :notify_zapier, if: :on_sale_tagged?
 
+  validates :category_id, :name, :description, :price, :stock_quantity, :sku, presence: true
+  validates :price, numericality: true
+  validates :stock_quantity, numericality: { only_integer: true }
+
   def self.ransackable_associations(auth_object = nil)
     ["cart_items", "category", "order_items", "product_tags", "products_galleries", "tags"]
   end
