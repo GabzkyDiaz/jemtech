@@ -59,7 +59,7 @@ import_products(laptops_file_path, 'Laptops / Notebooks')
 import_products(keyboards_file_path, 'Keyboards & Mice')
 import_products(gaming_monitors_file_path, 'Gaming Monitors')
 import_products(desktop_systems_file_path, 'Desktop Systems')
-=end
+
 
 # Clear existing static pages
 StaticPage.delete_all
@@ -96,3 +96,4 @@ StaticPage.create(
     </div>
   HTML
 )
+=end
