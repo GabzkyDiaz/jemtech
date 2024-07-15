@@ -78,3 +78,5 @@ gem "sassc-rails", "~> 2.1"
 gem "kaminari", "~> 1.2"
 
 gem 'faraday', '~> 2.10'
+
+gem 'country_select', '~> 9.0'
