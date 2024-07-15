@@ -80,3 +80,5 @@ gem "kaminari", "~> 1.2"
 gem 'faraday', '~> 2.10'
 
 gem 'country_select', '~> 9.0'
+
+gem 'rails-ujs', '5.1.0.beta1'

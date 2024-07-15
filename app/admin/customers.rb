@@ -17,4 +17,24 @@ ActiveAdmin.register Customer do
     end
     f.actions
   end
+
+  show do
+    attributes_table do
+      row :id
+      row :first_name
+      row :last_name
+      row :email
+      row :phone
+      row :address
+      row :city
+      row :province
+      row :zip_code
+      row :country do |customer|
+        country = ISO3166::Country[customer.country]
+        country.translations[I18n.locale.to_s] || country.iso_short_name || customer.country
+      end
+      row :created_at
+      row :updated_at
+    end
+  end
 end

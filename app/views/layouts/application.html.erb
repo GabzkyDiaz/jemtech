@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <%= javascript_include_tag 'script', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>  
   <%= stylesheet_link_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'custom', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'application.tailwind', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -87,11 +89,22 @@
           <li><a href="<%= products_path %>" class="hover:text-secondary font-semibold">Checkout</a></li>
         </ul>
       </nav>
-
       <!-- Right section: Buttons (for desktop) -->
       <div class="hidden lg:flex items-center space-x-4 relative">
-        <a href="/users/sign_up" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-        <a href="/users/sign_in" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
+        <% if customer_signed_in? %>
+  <a href="#" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
+    <%= current_customer.email %>
+  </a>
+  <%= form_with url: destroy_customer_session_path, method: :delete, local: true do %>
+    <button type="submit" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
+      Logout
+    </button>
+  <% end %>
+<% else %>
+  <a href="<%= new_customer_registration_path %>" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
+  <a href="<%= new_customer_session_path %>" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
+<% end %>
+
         <div class="relative group cart-wrapper">
           <a href="/cart">
             <img src="<%= asset_path('cart-shopping.svg') %>" alt="Cart" class="h-6 w-6 group-hover:scale-120">
@@ -140,7 +153,6 @@
       </div>
     </div>
   </header>
-
   <!-- Main Content -->
   <main class="container mx-auto py-8">
     <%= yield %>
@@ -166,8 +178,8 @@
         <div class="w-full sm:w-1/6 px-4 mb-8">
           <h3 class="text-lg font-semibold mb-4">Pages</h3>
           <ul>
-            <li><a href="<%= products_path %>" class="hover:text-primary">Shop</a></li>            
-            <li><a href="<%= products_path %>" class="hover:text-primary">Checkout</a></li>            
+            <li><a href="<%= products_path %>" class="hover:text-primary">Shop</a></li>
+            <li><a href="<%= products_path %>" class="hover:text-primary">Checkout</a></li>
             <li><a href="<%= about_path %>" class="hover:text-primary">About</a></li>
             <li><a href="<%= contact_path %>" class="hover:text-primary">Contact</a></li>
           </ul>
@@ -177,8 +189,13 @@
           <h3 class="text-lg font-semibold mb-4">Account</h3>
           <ul>
             <li><a href="/cart.html" class="hover:text-primary">Cart</a></li>
-            <li><a href="/users/sign_up" class="hover:text-primary">Registration</a></li>
-            <li><a href="/users/sign_in" class="hover:text-primary">Login</a></li>
+            <% if customer_signed_in? %>
+              <li><a href="#" class="hover:text-primary"><%= current_customer.email %></a></li>
+              <li><a href="<%= destroy_customer_session_path %>" data-method="delete" class="hover:text-primary">Logout</a></li>
+            <% else %>
+              <li><a href="<%= new_customer_registration_path %>" class="hover:text-primary">Registration</a></li>
+              <li><a href="<%= new_customer_session_path %>" class="hover:text-primary">Login</a></li>
+            <% end %>
           </ul>
         </div>
         <!-- Social Media -->
@@ -243,7 +260,6 @@ Welcome to Jemtech Computer Store, Winnipeg's premier technology retailer offeri
   </footer>
 
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-  <%= javascript_include_tag 'script', 'data-turbolinks-track': 'reload' %>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>  
 </body>
 </html>

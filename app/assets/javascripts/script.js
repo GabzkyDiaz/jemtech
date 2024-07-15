@@ -1,3 +1,7 @@
+/* Import Rails UJS */
+import Rails from '@rails/ujs';
+Rails.start();
+
 /* cart */
 document.addEventListener('DOMContentLoaded', function () {
   const cartIcon = document.querySelector('.cart-wrapper');
