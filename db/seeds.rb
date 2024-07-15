@@ -96,5 +96,5 @@ StaticPage.create(
     </div>
   HTML
 )
-  adding for branch adding again for branch
+  adding for branch adding again for branch add
 =end
