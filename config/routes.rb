@@ -15,4 +15,18 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
 
   get "up" => "rails/health#show", as: :rails_health_check
+
+  # Routes for Cart
+  resource :cart, only: [:show, :destroy] do
+    post 'add_item', on: :collection
+    patch 'update_item', on: :collection
+    delete 'remove_item', on: :collection
+    delete 'empty_cart', on: :collection  # Ensure this line is added
+  end
+
+  # Routes for Orders
+  resources :orders, only: [:new, :create, :show]
+
+  # Route for customer orders
+  get 'customer/orders', to: 'customers#orders', as: :customer_orders
 end

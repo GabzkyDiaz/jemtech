@@ -11,4 +11,8 @@ class Province < ApplicationRecord
 
   validates :name, :abbreviation, presence: true
   validates :gst_rate, :pst_rate, :hst_rate, :qst_rate, numericality: true
+
+  def total_tax_rate
+    gst_rate + pst_rate + hst_rate + qst_rate
+  end
 end

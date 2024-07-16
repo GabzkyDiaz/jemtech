@@ -1,0 +1,5 @@
+document.querySelector('.dropdown-menu').innerHTML = "<%= j(render partial: 'layouts/cart_dropdown', locals: { cart: @cart }) %>";
+showFlashMessage('Item added to cart!');
+
+document.querySelector('.cart-wrapper .group-hover\\:block').innerHTML = "<%= j render 'cart/cart_dropdown', cart: @cart %>";
+document.querySelector('.notice').textContent = "Product added to cart.";
