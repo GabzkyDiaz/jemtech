@@ -15,7 +15,7 @@ class CartsController < ApplicationController
     @cart.add_product(product, 1)
 
     respond_to do |format|
-      format.html { redirect_to cart_path }
+      format.html { redirect_to products_path }
       format.json { render json: { success: true, cart: @cart, cart_count: @cart.cart_items.count } }
       format.js { render partial: 'carts/cart_dropdown', locals: { cart: @cart } }
     end
