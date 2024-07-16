@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     post 'add_item', on: :collection
     patch 'update_item', on: :collection
     delete 'remove_item', on: :collection
-    delete 'empty_cart', on: :collection  # Ensure this line is added
+    delete 'empty_cart', on: :collection
   end
 
   # Routes for Orders

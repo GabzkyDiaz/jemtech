@@ -4,12 +4,21 @@ class CartsController < ApplicationController
 
   def show
     @cart_items = @cart.cart_items
+    respond_to do |format|
+      format.html
+      format.js { render partial: 'carts/cart_dropdown', locals: { cart: @cart } }
+    end
   end
 
   def add_item
     product = Product.find(params[:product_id])
     @cart.add_product(product, 1)
-    redirect_to cart_path
+
+    respond_to do |format|
+      format.html { redirect_to cart_path }
+      format.json { render json: { success: true, cart: @cart, cart_count: @cart.cart_items.count } }
+      format.js { render partial: 'carts/cart_dropdown', locals: { cart: @cart } }
+    end
   end
 
   def update_item
