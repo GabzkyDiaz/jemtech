@@ -12,8 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-  <%= javascript_include_tag 'script', 'data-turbolinks-track': 'reload' %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>  
   <%= stylesheet_link_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'custom', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'application.tailwind', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -244,6 +242,8 @@
   </footer>
 
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>  
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <%= javascript_include_tag 'script', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </body>
 </html>
