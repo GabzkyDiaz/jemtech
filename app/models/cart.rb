@@ -26,7 +26,22 @@ class Cart < ApplicationRecord
   end
 
   def calculate_taxes
-    customer.province.gst_rate * subtotal
+    province = customer.province
+    gst = province.gst_rate * subtotal
+    pst = province.pst_rate * subtotal
+    hst = province.hst_rate * subtotal
+    qst = province.qst_rate * subtotal
+    gst + pst + hst + qst
+  end
+
+  def tax_breakdown
+    province = customer.province
+    breakdown = {}
+    breakdown["GST (#{province.gst_rate * 100}%)"] = province.gst_rate * subtotal if province.gst_rate > 0
+    breakdown["PST (#{province.pst_rate * 100}%)"] = province.pst_rate * subtotal if province.pst_rate > 0
+    breakdown["HST (#{province.hst_rate * 100}%)"] = province.hst_rate * subtotal if province.hst_rate > 0
+    breakdown["QST (#{province.qst_rate * 100}%)"] = province.qst_rate * subtotal if province.qst_rate > 0
+    breakdown
   end
 
   def total

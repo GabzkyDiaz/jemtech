@@ -59,6 +59,14 @@
             <p>Taxes</p>
             <p><%= number_to_currency(@cart.calculate_taxes) %></p>
           </div>
+          <div class="flex flex-col mb-4">
+            <% @cart.tax_breakdown.each do |tax_name, amount| %>
+              <div class="flex justify-between">
+                <p><%= tax_name %></p>
+                <p><%= number_to_currency(amount) %></p>
+              </div>
+            <% end %>
+          </div>
           <div class="flex justify-between mb-4 pb-4 border-b border-gray-line">
             <p>Shipping</p>
             <p>$0.00</p>
