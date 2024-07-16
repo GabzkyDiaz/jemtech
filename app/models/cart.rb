@@ -4,6 +4,10 @@ class Cart < ApplicationRecord
 
   validates :customer_id, presence: true
 
+  def self.ransackable_attributes(auth_object = nil)
+    ["created_at", "customer_id", "id", "id_value", "updated_at"]
+  end
+
   def add_product(product, quantity)
     cart_item = cart_items.find_or_initialize_by(product: product)
     cart_item.quantity = (cart_item.quantity || 0) + quantity

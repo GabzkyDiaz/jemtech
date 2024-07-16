@@ -12,6 +12,10 @@ class Order < ApplicationRecord
     ["created_at", "customer_id", "gst_rate", "hst_rate", "id", "id_value", "order_date", "pst_rate", "qst_rate", "status", "total_amount", "updated_at"]
   end
 
+  def self.ransackable_associations(auth_object = nil)
+    ["customer", "order_items"]
+  end
+
   def calculate_total
     province = Province.find(province_id)
     self.gst_rate = province.gst_rate
