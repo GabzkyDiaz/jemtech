@@ -1,3 +1,4 @@
+<!-- app/views/orders/new.html.erb -->
 <div class="container mx-auto py-8">
   <h2 class="text-2xl font-semibold mb-6">Checkout</h2>
   <div class="flex flex-col md:flex-row gap-4">
@@ -71,13 +72,8 @@
         <p class="font-semibold"><%= number_to_currency(@order.total_amount, unit: "CAD$") %></p>
       </div>
 
-      <% if @payment_intent.present? %>
-        <form id="payment-form" action="<%= orders_path %>" method="post">
-          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-          <input type="hidden" name="payment_intent_id" id="payment-intent-id" value="<%= @payment_intent.id %>">
-          <div id="card-element">
-            <!-- Stripe's card element will be inserted here -->
-          </div>
+      <% if @checkout_session.present? %>
+        <form action="<%= @checkout_session.url %>" method="GET">
           <button type="submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full mt-4">Proceed to Payment</button>
         </form>
       <% else %>
@@ -86,44 +82,3 @@
     </div>
   </div>
 </div>
-
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const stripe = Stripe("<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>");
-    const elements = stripe.elements();
-    const card = elements.create('card');
-    card.mount('#card-element');
-
-    const form = document.getElementById('payment-form');
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const { setupIntent, error } = await stripe.confirmCardSetup(
-        '<%= @payment_intent&.client_secret %>',
-        {
-          payment_method: {
-            card: card,
-            billing_details: {
-              name: '<%= "#{current_customer.first_name} #{current_customer.last_name}" %>',
-              email: '<%= current_customer.email %>',
-              address: {
-                line1: '<%= current_customer.address %>',
-                city: '<%= current_customer.city %>',
-                state: '<%= current_customer.province.try(:name) %>',
-                postal_code: '<%= current_customer.zip_code %>',
-                country: '<%= current_customer.country %>',
-              }
-            }
-          }
-        }
-      );
-
-      if (error) {
-        // Display error.message in your UI
-      } else {
-        document.getElementById('payment-intent-id').value = setupIntent.payment_method;
-        form.submit();
-      }
-    });
-  });
-</script>

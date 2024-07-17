@@ -10,10 +10,10 @@ class OrdersController < ApplicationController
     if @order.total_amount >= minimum_amount_in_cents / 100.0
       @order.save(validate: false) # Save without validation to calculate total_amount
       begin
-        @payment_intent = StripePaymentService.new(@order).create_payment_intent
+        @checkout_session = StripePaymentService.new(@order).create_checkout_session
       rescue => e
-        flash[:alert] = "Error creating payment intent: #{e.message}"
-        @payment_intent = nil
+        flash[:alert] = "Error creating checkout session: #{e.message}"
+        @checkout_session = nil
       end
     else
       flash[:alert] = "Order amount is too low to process payment."
@@ -23,8 +23,8 @@ class OrdersController < ApplicationController
   def create
     @order = current_customer.orders.build(order_params)
     if @order.save && update_customer_info
-      @order.update(status: 'pending', stripe_payment_id: params[:payment_intent_id])
-      redirect_to order_path(@order), notice: 'Order created successfully.'
+      @order.update(status: 'pending', stripe_payment_id: params[:session_id])
+      redirect_to @order, notice: 'Order created successfully.'
     else
       render :new
     end

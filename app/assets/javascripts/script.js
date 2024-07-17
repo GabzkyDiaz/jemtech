@@ -1,3 +1,4 @@
+// app/javascript/packs/script.js
 document.addEventListener('DOMContentLoaded', function () {
   // Initialize Swiper
   if (typeof Swiper !== 'undefined') {
@@ -27,6 +28,54 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     });
   }
+
+  // Function to handle updating customer information and updating the order summary
+  const updateCustomerInfo = () => {
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      fetch(form.action, {
+        method: 'PATCH',
+        headers: {
+          'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json'
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          document.querySelector('#order-summary').innerHTML = `
+            <div class="flex justify-between mb-4">
+              <p>Subtotal</p>
+              <p>${data.subtotal}</p>
+            </div>
+            <div class="flex justify-between mb-4">
+              <p>GST (5.0%)</p>
+              <p>${data.gst}</p>
+            </div>
+            <div class="flex justify-between mb-4">
+              <p>PST (7.0%)</p>
+              <p>${data.pst}</p>
+            </div>
+            <div class="flex justify-between mb-4">
+              <p>Shipping</p>
+              <p>CAD$0.00</p>
+            </div>
+            <div class="flex justify-between mb-2">
+              <p class="font-semibold">Total</p>
+              <p class="font-semibold">${data.total}</p>
+            </div>
+          `;
+        }
+      });
+    });
+  };
+
+  updateCustomerInfo();
 
   // Add to cart functionality
   document.querySelectorAll('.add-to-cart-button').forEach(function (button) {
