@@ -8,6 +8,14 @@ class Order < ApplicationRecord
   validates :customer_id, :order_date, :status, :total_amount, presence: true
   validates :total_amount, :gst_rate, :pst_rate, :hst_rate, :qst_rate, numericality: true
 
+  enum status: { pending: 'pending', paid: 'paid', shipped: 'shipped' }
+
+  after_initialize :set_default_status, if: :new_record?
+
+  def set_default_status
+    self.status ||= 'pending'
+  end
+
   def self.ransackable_attributes(auth_object = nil)
     ["created_at", "customer_id", "gst_rate", "hst_rate", "id", "id_value", "order_date", "pst_rate", "qst_rate", "status", "total_amount", "updated_at"]
   end
