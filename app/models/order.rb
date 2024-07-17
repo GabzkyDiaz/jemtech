@@ -48,11 +48,11 @@ class Order < ApplicationRecord
   end
 
   def tax_breakdown
-    {
-      "GST (#{gst_rate * 100}%)" => gst_amount,
-      "PST (#{pst_rate * 100}%)" => pst_amount,
-      "HST (#{hst_rate * 100}%)" => hst_amount,
-      "QST (#{qst_rate * 100}%)" => qst_amount
-    }
+    breakdown = {}
+    breakdown["GST (#{gst_rate * 100}%)"] = gst_amount if gst_rate > 0
+    breakdown["PST (#{pst_rate * 100}%)"] = pst_amount if pst_rate > 0
+    breakdown["HST (#{hst_rate * 100}%)"] = hst_amount if hst_rate > 0
+    breakdown["QST (#{qst_rate * 100}%)"] = qst_amount if qst_rate > 0
+    breakdown
   end
 end
