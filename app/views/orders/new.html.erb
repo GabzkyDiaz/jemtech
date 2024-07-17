@@ -1,0 +1,78 @@
+<div class="container mx-auto py-8">
+  <h2 class="text-2xl font-semibold mb-6">Checkout</h2>
+  <div class="flex flex-col md:flex-row gap-4">
+    <!-- Billing Details Section -->
+    <div class="md:w-2/3 bg-white rounded-lg shadow-md p-4">
+      <h2 class="text-xl font-semibold mb-4">Billing Details</h2>
+      <%= form_with model: current_customer, url: update_customer_info_orders_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+        <div class="mb-4">
+          <%= form.label :full_name, 'Full Name', class: "mb-4" %>
+          <%= form.text_field :full_name, value: "#{current_customer.first_name} #{current_customer.last_name}", class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary", disabled: true %>
+        </div>
+        <div class="mb-4">
+          <%= form.label :email, 'Email', class: "mb-4" %>
+          <%= form.email_field :email, value: current_customer.email, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary", disabled: true %>
+        </div>
+        <div class="mb-4">
+          <%= form.label :address, 'Address', class: "mb-4" %>
+          <%= form.text_field :address, value: current_customer.address, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+        </div>
+        <div class="mb-4">
+          <%= form.label :city, 'City', class: "mb-4" %>
+          <%= form.text_field :city, value: current_customer.city, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+        </div>
+        <div class="mb-4 flex gap-4">
+          <div class="w-1/2">
+            <%= form.label :province_id, 'Province', class: "mb-4" %>
+            <%= form.collection_select :province_id, Province.all, :id, :name, { selected: current_customer.province_id }, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+          </div>
+          <div class="w-1/2">
+            <%= form.label :zip_code, 'ZIP Code', class: "mb-4" %>
+            <%= form.text_field :zip_code, value: current_customer.zip_code, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+          </div>
+        </div>
+        <div class="mb-4">
+          <%= form.label :country, 'Country', class: "mb-4" %>
+          <%= form.country_select :country, { selected: current_customer.country }, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+        </div>
+        <div class="mb-4">
+          <%= form.label :phone, 'Phone Number', class: "mb-4" %>
+          <%= form.telephone_field :phone, value: current_customer.phone, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+        </div>
+        <div class="mb-4">
+          <%= form.submit 'Update Information', class: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Order Summary Section -->
+    <div class="md:w-1/3 bg-white rounded-lg shadow-md p-4">
+      <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+      <div class="flex justify-between mb-4">
+        <p>Subtotal</p>
+        <p><%= number_to_currency(@cart.subtotal) %></p>
+      </div>
+      <div class="flex justify-between mb-4">
+        <p>Taxes</p>
+        <p><%= number_to_currency(@cart.calculate_taxes) %></p>
+      </div>
+      <div class="flex flex-col mb-4">
+        <% @cart.tax_breakdown.each do |tax_name, amount| %>
+          <div class="flex justify-between">
+            <p><%= tax_name %></p>
+            <p><%= number_to_currency(amount) %></p>
+          </div>
+        <% end %>
+      </div>
+      <div class="flex justify-between mb-4 pb-4 border-b border-gray-line">
+        <p>Shipping</p>
+        <p>$0.00</p>
+      </div>
+      <div class="flex justify-between mb-4">
+        <p class="font-semibold">Total</p>
+        <p class="font-semibold"><%= number_to_currency(@cart.total) %></p>
+      </div>
+      <%= link_to 'Proceed to Payment', new_order_path, class: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full" %>
+    </div>
+  </div>
+</div>

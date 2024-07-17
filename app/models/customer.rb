@@ -18,4 +18,8 @@ class Customer < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, format: { with: /\A\+?\d{10,15}\z/ }
   validates :province_id, numericality: { only_integer: true }
+
+  def current_cart
+    carts.order(created_at: :desc).first_or_create
+  end
 end

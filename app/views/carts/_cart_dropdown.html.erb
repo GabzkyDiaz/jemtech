@@ -1,0 +1,17 @@
+<% if cart.cart_items.any? %>
+  <% cart.cart_items.each do |item| %>
+    <div class="flex items-center justify-between pb-4 border-b border-gray-line">
+      <div class="flex items-center">
+        <%= image_tag item.product.image_url, class: 'h-12 w-12 object-cover rounded mr-2' %>
+        <div>
+          <p class="font-semibold"><%= truncated_product_name(item.product.name) %></p>
+          <p class="text-sm">Quantity: <%= item.quantity %></p>
+        </div>
+      </div>
+      <p class="font-semibold"><%= number_to_currency(item.product.price * item.quantity) %></p>
+    </div>
+  <% end %>
+  <!-- <a href="/cart" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a> -->
+<% else %>
+  <p class="text-center">Your cart is empty.</p>  
+<% end %>

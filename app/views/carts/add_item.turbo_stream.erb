@@ -1,0 +1,9 @@
+<%= turbo_stream.replace 'cart-dropdown' do %>
+  <%= render partial: 'carts/cart_dropdown', locals: { cart: @cart } %>
+<% end %>
+
+<%= turbo_stream.append 'flash-messages' do %>
+  <div class="alert alert-success">
+    Item added to cart!
+  </div>
+<% end %>

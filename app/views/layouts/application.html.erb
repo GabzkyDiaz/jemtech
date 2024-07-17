@@ -12,8 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-  <%= javascript_include_tag 'script', 'data-turbolinks-track': 'reload' %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>  
   <%= stylesheet_link_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'custom', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= stylesheet_link_tag 'application.tailwind', media: 'all', 'data-turbolinks-track': 'reload' %>
@@ -86,56 +84,39 @@
             </ul>
           </li>
           <li><a href="<%= products_path %>" class="hover:text-secondary font-semibold">Shop</a></li>
-          <li><a href="<%= products_path %>" class="hover:text-secondary font-semibold">Checkout</a></li>
+          <li><a href="<%= new_order_path %>" class="hover:text-secondary font-semibold">Checkout</a></li>
         </ul>
       </nav>
       <!-- Right section: Buttons (for desktop) -->
       <div class="hidden lg:flex items-center space-x-4 relative">
         <% if customer_signed_in? %>
-  <a href="#" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
-    <%= current_customer.email %>
-  </a>
-  <%= form_with url: destroy_customer_session_path, method: :delete, local: true do %>
-    <button type="submit" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
-      Logout
-    </button>
-  <% end %>
-<% else %>
-  <a href="<%= new_customer_registration_path %>" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-  <a href="<%= new_customer_session_path %>" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
-<% end %>
+          <a href="#" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
+            <%= current_customer.email %>
+          </a>
+          <%= form_with url: destroy_customer_session_path, method: :delete, local: true do %>
+            <button type="submit" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
+              Logout
+            </button>
+          <% end %>
+        <% else %>
+          <a href="<%= new_customer_registration_path %>" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
+          <a href="<%= new_customer_session_path %>" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
+        <% end %>
 
         <div class="relative group cart-wrapper">
-          <a href="/cart">
+          <a id="cart-button" href="javascript:void(0);">
             <img src="<%= asset_path('cart-shopping.svg') %>" alt="Cart" class="h-6 w-6 group-hover:scale-120">
           </a>
           <!-- Cart dropdown -->
-          <div class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
-            <div class="space-y-4">
-              <!-- product item -->
-              <div class="flex items-center justify-between pb-4 border-b border-gray-line">
-                <div class="flex items-center">
-                  <img src="<%= asset_path('single-product/1.jpg') %>" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
-                  <div>
-                    <p class="font-semibold">Summer black dress</p>
-                    <p class="text-sm">Quantity: 1</p>
-                  </div>
-                </div>
-                <p class="font-semibold">$25.00</p>
-              </div>
-              <!-- product item -->
-              <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                  <img src="<%= asset_path('single-product/2.jpg') %>" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
-                  <div>
-                    <p class="font-semibold">Black suit</p>
-                    <p class="text-sm">Quantity: 1</p>
-                  </div>
-                </div>
-                <p class="font-semibold">$125.00</p>
-              </div>
+          <div id="cart-dropdown" class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
+            <div id="cart-contents">
+              <% if @cart && @cart.cart_items.any? %>
+                <%= render partial: 'carts/cart_dropdown', locals: { cart: @cart } %>
+              <% else %>
+                <p class="text-center">Your cart is empty.</p>
+              <% end %>
             </div>
-            <a href="/cart" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
+             <a href="/cart" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a> 
           </div>
         </div>
         <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
@@ -247,7 +228,8 @@
             <li><a href="#" class="hover:text-primary">FAQ</a></li>
           </ul>
           <p class="text-sm mt-4">
-Welcome to Jemtech Computer Store, Winnipeg's premier technology retailer offering a wide range of quality computer products and accessories, supported by over 10 years of experience, a dedicated team, and an intuitive e-commerce platform for all your tech needs.</p>
+            Welcome to Jemtech Computer Store, Winnipeg's premier technology retailer offeributtonng a wide range of quality computer products and accessories, supported by over 10 years of experience, a dedicated team, and an intuitive e-commerce platform for all your tech needs.
+          </p>
         </div>
         <!-- Payment Icons -->
         <div class="w-full lg:w-1/4 text-center lg:text-right">
@@ -260,6 +242,8 @@ Welcome to Jemtech Computer Store, Winnipeg's premier technology retailer offeri
   </footer>
 
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>  
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+  <%= javascript_include_tag 'script', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </body>
 </html>
