@@ -4,7 +4,7 @@
     <!-- Billing Details Section -->
     <div class="md:w-2/3 bg-white rounded-lg shadow-md p-4">
       <h2 class="text-xl font-semibold mb-4">Billing Details</h2>
-      <%= form_with model: current_customer, url: update_customer_info_orders_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+      <%= form_with model: current_customer, url: update_customer_info_orders_path, method: :patch, local: true, class: "space-y-4", data: { remote: true } do |form| %>
         <!-- Form fields for updating customer information -->
         <div class="mb-4">
           <%= form.label :full_name, 'Full Name', class: "mb-4" %>
@@ -52,13 +52,13 @@
       <!-- Order summary details -->
       <div class="flex justify-between mb-4">
         <p>Subtotal</p>
-        <p><%= number_to_currency(@cart.subtotal, unit: "CAD$") %></p>
+        <p id="subtotal"><%= number_to_currency(@cart.subtotal, unit: "CAD$") %></p>
       </div>
       <div class="flex flex-col mb-4">
         <% @order.tax_breakdown.each do |tax_name, amount| %>
           <div class="flex justify-between">
             <p><%= tax_name %></p>
-            <p><%= number_to_currency(amount, unit: "CAD$") %></p>
+            <p id="<%= tax_name.parameterize %>"><%= number_to_currency(amount, unit: "CAD$") %></p>
           </div>
         <% end %>
       </div>
@@ -68,7 +68,7 @@
       </div>
       <div class="flex justify-between mb-2">
         <p class="font-semibold">Total</p>
-        <p class="font-semibold"><%= number_to_currency(@order.total_amount, unit: "CAD$") %></p>
+        <p id="total" class="font-semibold"><%= number_to_currency(@order.total_amount, unit: "CAD$") %></p>
       </div>
 
       <% if @payment_intent.present? %>
@@ -124,6 +124,20 @@
         document.getElementById('payment-intent-id').value = setupIntent.payment_method;
         form.submit();
       }
+    });
+
+    // Handle updating customer information
+    $('form[data-remote="true"]').on('ajax:success', function(event) {
+      const [data, status, xhr] = event.detail;
+      $('#subtotal').text(data.subtotal);
+      $('#gst').text(data.gst);
+      $('#pst').text(data.pst);
+      $('#hst').text(data.hst);
+      $('#qst').text(data.qst);
+      $('#total').text(data.total);
+    }).on('ajax:error', function(event) {
+      const [data, status, xhr] = event.detail;
+      alert(data.error || 'Failed to update customer information.');
     });
   });
 </script>

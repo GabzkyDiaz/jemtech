@@ -1,7 +1,7 @@
 # app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
   before_action :authenticate_customer!
-  before_action :set_cart, only: [:new, :create]
+  before_action :set_cart, only: [:new, :create, :update_customer_info]
 
   def new
     @order = current_customer.orders.build
@@ -36,9 +36,17 @@ class OrdersController < ApplicationController
 
   def update_customer_info
     if current_customer.update(customer_params)
-      true
+      @order = current_customer.orders.build
+      build_order_from_cart(@order, @cart)
+      respond_to do |format|
+        format.html { redirect_to new_order_path, notice: 'Customer information updated.' }
+        format.json { render json: tax_breakdown_json(@order) }
+      end
     else
-      false
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: { error: 'Failed to update customer information.' }, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -65,5 +73,16 @@ class OrdersController < ApplicationController
 
   def minimum_amount_in_cents
     50 # Minimum amount in cents (0.50 CAD)
+  end
+
+  def tax_breakdown_json(order)
+    {
+      subtotal: number_to_currency(order.subtotal, unit: "CAD$"),
+      gst: number_to_currency(order.gst_amount, unit: "CAD$"),
+      pst: number_to_currency(order.pst_amount, unit: "CAD$"),
+      hst: number_to_currency(order.hst_amount, unit: "CAD$"),
+      qst: number_to_currency(order.qst_amount, unit: "CAD$"),
+      total: number_to_currency(order.total_amount, unit: "CAD$")
+    }
   end
 end
