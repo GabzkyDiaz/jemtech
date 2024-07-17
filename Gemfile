@@ -82,3 +82,5 @@ gem 'faraday', '~> 2.10'
 gem 'country_select', '~> 9.0'
 
 gem 'rails-ujs', '5.1.0.beta1'
+
+gem 'stripe', '~> 12.2'

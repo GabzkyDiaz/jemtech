@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :products, only: [:index, :show]
   get 'search', to: 'products#search', as: :search_products
 
+  post 'stripe_webhooks', to: 'stripe_webhooks#create'
+
   devise_for :customers, controllers: {
     registrations: 'customers/registrations',
     sessions: 'customers/sessions',

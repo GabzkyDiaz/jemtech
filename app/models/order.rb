@@ -1,3 +1,4 @@
+# app/models/order.rb
 class Order < ApplicationRecord
   belongs_to :customer
   has_many :order_items, dependent: :destroy
@@ -17,13 +18,34 @@ class Order < ApplicationRecord
   end
 
   def calculate_total
-    province = Province.find(province_id)
-    self.gst_rate = province.gst_rate
-    self.pst_rate = province.pst_rate
-    self.hst_rate = province.hst_rate
-    self.qst_rate = province.qst_rate
+    province = customer.province
+    self.gst_rate = province.gst_rate || 0.0
+    self.pst_rate = province.pst_rate || 0.0
+    self.hst_rate = province.hst_rate || 0.0
+    self.qst_rate = province.qst_rate || 0.0
 
-    subtotal = order_items.sum { |item| item.price * item.quantity }
-    self.total_amount = subtotal + subtotal * gst_rate + subtotal * pst_rate + subtotal * hst_rate + subtotal * qst_rate
+    subtotal = order_items.sum { |item| (item.price || 0) * (item.quantity || 0) }
+    gst = gst_rate * subtotal
+    pst = pst_rate * subtotal
+    hst = hst_rate * subtotal
+    qst = qst_rate * subtotal
+
+    self.total_amount = subtotal + gst + pst + hst + qst
+  end
+
+  def tax_breakdown
+    province = customer.province
+    breakdown = {}
+    breakdown["GST (#{province.gst_rate * 100}%)"] = province.gst_rate * subtotal if province.gst_rate > 0
+    breakdown["PST (#{province.pst_rate * 100}%)"] = province.pst_rate * subtotal if province.pst_rate > 0
+    breakdown["HST (#{province.hst_rate * 100}%)"] = province.hst_rate * subtotal if province.hst_rate > 0
+    breakdown["QST (#{province.qst_rate * 100}%)"] = province.qst_rate * subtotal if province.qst_rate > 0
+    breakdown
+  end
+
+  private
+
+  def subtotal
+    order_items.sum { |item| (item.price || 0) * (item.quantity || 0) }
   end
 end

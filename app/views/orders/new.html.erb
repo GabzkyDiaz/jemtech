@@ -5,6 +5,7 @@
     <div class="md:w-2/3 bg-white rounded-lg shadow-md p-4">
       <h2 class="text-xl font-semibold mb-4">Billing Details</h2>
       <%= form_with model: current_customer, url: update_customer_info_orders_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+        <!-- Form fields for updating customer information -->
         <div class="mb-4">
           <%= form.label :full_name, 'Full Name', class: "mb-4" %>
           <%= form.text_field :full_name, value: "#{current_customer.first_name} #{current_customer.last_name}", class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary", disabled: true %>
@@ -48,31 +49,81 @@
     <!-- Order Summary Section -->
     <div class="md:w-1/3 bg-white rounded-lg shadow-md p-4">
       <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+      <!-- Order summary details -->
       <div class="flex justify-between mb-4">
         <p>Subtotal</p>
-        <p><%= number_to_currency(@cart.subtotal) %></p>
-      </div>
-      <div class="flex justify-between mb-4">
-        <p>Taxes</p>
-        <p><%= number_to_currency(@cart.calculate_taxes) %></p>
+        <p><%= number_to_currency(@cart.subtotal, unit: "CAD$") %></p>
       </div>
       <div class="flex flex-col mb-4">
-        <% @cart.tax_breakdown.each do |tax_name, amount| %>
+        <% @order.tax_breakdown.each do |tax_name, amount| %>
           <div class="flex justify-between">
             <p><%= tax_name %></p>
-            <p><%= number_to_currency(amount) %></p>
+            <p><%= number_to_currency(amount, unit: "CAD$") %></p>
           </div>
         <% end %>
       </div>
       <div class="flex justify-between mb-4 pb-4 border-b border-gray-line">
         <p>Shipping</p>
-        <p>$0.00</p>
+        <p>CAD$0.00</p>
       </div>
-      <div class="flex justify-between mb-4">
+      <div class="flex justify-between mb-2">
         <p class="font-semibold">Total</p>
-        <p class="font-semibold"><%= number_to_currency(@cart.total) %></p>
+        <p class="font-semibold"><%= number_to_currency(@order.total_amount, unit: "CAD$") %></p>
       </div>
-      <%= link_to 'Proceed to Payment', new_order_path, class: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full" %>
+
+      <% if @payment_intent.present? %>
+        <form id="payment-form" action="<%= orders_path %>" method="post">
+          <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+          <input type="hidden" name="payment_intent_id" id="payment-intent-id" value="<%= @payment_intent.id %>">
+          <div id="card-element">
+            <!-- Stripe's card element will be inserted here -->
+          </div>
+          <button type="submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full mt-4">Proceed to Payment</button>
+        </form>
+      <% else %>
+        <div class="text-red-500">Unable to process payment. Order amount is too low.</div>
+      <% end %>
     </div>
   </div>
 </div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const stripe = Stripe("<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>");
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const { setupIntent, error } = await stripe.confirmCardSetup(
+        '<%= @payment_intent&.client_secret %>',
+        {
+          payment_method: {
+            card: card,
+            billing_details: {
+              name: '<%= "#{current_customer.first_name} #{current_customer.last_name}" %>',
+              email: '<%= current_customer.email %>',
+              address: {
+                line1: '<%= current_customer.address %>',
+                city: '<%= current_customer.city %>',
+                state: '<%= current_customer.province.try(:name) %>',
+                postal_code: '<%= current_customer.zip_code %>',
+                country: '<%= current_customer.country %>',
+              }
+            }
+          }
+        }
+      );
+
+      if (error) {
+        // Display error.message in your UI
+      } else {
+        document.getElementById('payment-intent-id').value = setupIntent.payment_method;
+        form.submit();
+      }
+    });
+  });
+</script>
