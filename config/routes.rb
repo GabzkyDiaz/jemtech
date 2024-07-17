@@ -25,7 +25,11 @@ Rails.application.routes.draw do
   end
 
   # Routes for Orders
-  resources :orders, only: [:new, :create, :show]
+  resources :orders, only: [:new, :create, :show] do
+    collection do
+      patch :update_customer_info
+    end
+  end
 
   # Route for customer orders
   get 'customer/orders', to: 'customers#orders', as: :customer_orders
