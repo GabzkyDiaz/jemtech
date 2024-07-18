@@ -39,4 +39,8 @@ Rails.application.routes.draw do
 
   # Route for customer orders
   get 'customer/orders', to: 'customers#orders', as: :customer_orders
+
+  # Routes for customer profile
+  get 'customer/profile', to: 'customers#profile', as: :customer_profile
+  patch 'customer/profile', to: 'customers#update_profile'
 end

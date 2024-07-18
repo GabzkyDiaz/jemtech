@@ -91,7 +91,7 @@
       <div class="hidden lg:flex items-center space-x-4 relative">
         <% if customer_signed_in? %>
           <a href="#" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
-            <%= current_customer.email %>
+            Welcome, <%= current_customer.first_name %>!
           </a>
           <%= form_with url: destroy_customer_session_path, method: :delete, local: true do %>
             <button type="submit" class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">
@@ -116,7 +116,7 @@
                 <p class="text-center">Your cart is empty.</p>
               <% end %>
             </div>
-             <a href="/cart" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a> 
+            <a href="/cart" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
           </div>
         </div>
         <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
@@ -169,10 +169,11 @@
         <div class="w-full sm:w-1/6 px-4 mb-8">
           <h3 class="text-lg font-semibold mb-4">Account</h3>
           <ul>
-            <li><a href="/cart.html" class="hover:text-primary">Cart</a></li>
+            <li><a href="/customer/profile" class="hover:text-primary">Your Profile</a></li>
+            <li><a href="/cart.html" class="hover:text-primary">Your Cart</a></li>
             <li><a href="/customer/orders" class="hover:text-primary">Order History</a></li>
             <% if customer_signed_in? %>
-              <li><a href="#" class="hover:text-primary"><%= current_customer.email %></a></li>
+              <li><a href="#" class="hover:text-primary">Welcome, <%= current_customer.first_name %>!</a></li>
               <li><a href="<%= destroy_customer_session_path %>" data-method="delete" class="hover:text-primary">Logout</a></li>
             <% else %>
               <li><a href="<%= new_customer_registration_path %>" class="hover:text-primary">Registration</a></li>
@@ -229,7 +230,7 @@
             <li><a href="#" class="hover:text-primary">FAQ</a></li>
           </ul>
           <p class="text-sm mt-4">
-            Welcome to Jemtech Computer Store, Winnipeg's premier technology retailer offeributtonng a wide range of quality computer products and accessories, supported by over 10 years of experience, a dedicated team, and an intuitive e-commerce platform for all your tech needs.
+            Welcome to Jemtech Computer Store, Winnipeg's premier technology retailer offering a wide range of quality computer products and accessories, supported by over 10 years of experience, a dedicated team, and an intuitive e-commerce platform for all your tech needs.
           </p>
         </div>
         <!-- Payment Icons -->

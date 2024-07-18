@@ -1,0 +1,49 @@
+<!-- app/views/customers/profile.html.erb -->
+<div class="container mx-auto py-8">
+  <h2 class="text-2xl font-semibold mb-6">Your Profile</h2>
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+    <%= form_with model: @customer, url: customer_profile_path, method: :patch, local: true, class: "space-y-4" do |form| %>
+      <div class="mb-4">
+        <%= form.label :first_name, 'First Name', class: "mb-4" %>
+        <%= form.text_field :first_name, value: @customer.first_name, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4">
+        <%= form.label :last_name, 'Last Name', class: "mb-4" %>
+        <%= form.text_field :last_name, value: @customer.last_name, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4">
+        <%= form.label :email, 'Email', class: "mb-4" %>
+        <%= form.email_field :email, value: @customer.email, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4">
+        <%= form.label :address, 'Address', class: "mb-4" %>
+        <%= form.text_field :address, value: @customer.address, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4">
+        <%= form.label :city, 'City', class: "mb-4" %>
+        <%= form.text_field :city, value: @customer.city, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4 flex gap-4">
+        <div class="w-1/2">
+          <%= form.label :province_id, 'Province', class: "mb-4" %>
+          <%= form.collection_select :province_id, Province.all, :id, :name, { selected: @customer.province_id }, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+        </div>
+        <div class="w-1/2">
+          <%= form.label :zip_code, 'ZIP Code', class: "mb-4" %>
+          <%= form.text_field :zip_code, value: @customer.zip_code, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+        </div>
+      </div>
+      <div class="mb-4">
+        <%= form.label :country, 'Country', class: "mb-4" %>
+        <%= form.country_select :country, { selected: @customer.country }, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4">
+        <%= form.label :phone, 'Phone Number', class: "mb-4" %>
+        <%= form.telephone_field :phone, value: @customer.phone, class: "w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" %>
+      </div>
+      <div class="mb-4">
+        <%= form.submit 'Update Information', class: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full" %>
+      </div>
+    <% end %>
+  </div>
+</div>
