@@ -18,8 +18,8 @@ class StripePaymentService
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: "#{Rails.application.routes.url_helpers.order_url(@order)}/success",
-      cancel_url: "#{Rails.application.routes.url_helpers.new_order_url}?status=cancel",
+      success_url: "#{Rails.application.routes.url_helpers.success_order_url(@order)}",
+      cancel_url: "#{Rails.application.routes.url_helpers.cancel_order_url(@order)}",
     })
   end
 end

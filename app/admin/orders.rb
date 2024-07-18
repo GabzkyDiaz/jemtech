@@ -1,3 +1,4 @@
+# app/admin/orders.rb
 ActiveAdmin.register Order do
   permit_params :customer_id, :order_date, :status, :total_amount, :gst_rate, :pst_rate, :hst_rate, :qst_rate,
                 order_items_attributes: [:id, :order_id, :product_id, :quantity, :price, :_destroy]
@@ -22,6 +23,7 @@ ActiveAdmin.register Order do
       row :pst_rate
       row :hst_rate
       row :qst_rate
+      row :stripe_payment_id
     end
 
     panel "Order Items" do
@@ -43,6 +45,7 @@ ActiveAdmin.register Order do
       f.input :pst_rate
       f.input :hst_rate
       f.input :qst_rate
+      f.input :stripe_payment_id
     end
 
     f.has_many :order_items, allow_destroy: true do |item|
@@ -53,4 +56,10 @@ ActiveAdmin.register Order do
 
     f.actions
   end
+
+  filter :customer
+  filter :order_date
+  filter :status
+  filter :total_amount
+  filter :stripe_payment_id, as: :string
 end

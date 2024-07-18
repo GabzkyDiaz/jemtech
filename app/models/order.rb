@@ -1,3 +1,4 @@
+# app/models/order.rb
 class Order < ApplicationRecord
   belongs_to :customer
   has_many :order_items, dependent: :destroy
@@ -17,7 +18,7 @@ class Order < ApplicationRecord
   end
 
   def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "customer_id", "gst_rate", "hst_rate", "id", "id_value", "order_date", "pst_rate", "qst_rate", "status", "total_amount", "updated_at"]
+    ["created_at", "customer_id", "gst_rate", "hst_rate", "id", "order_date", "pst_rate", "qst_rate", "status", "stripe_payment_id", "total_amount", "updated_at"]
   end
 
   def self.ransackable_associations(auth_object = nil)

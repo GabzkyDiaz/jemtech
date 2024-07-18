@@ -1,3 +1,4 @@
+# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
   before_action :authenticate_customer!
   before_action :set_cart, only: [:new, :create, :update_customer_info]
@@ -31,6 +32,26 @@ class OrdersController < ApplicationController
 
   def show
     @order = Order.find(params[:id])
+  end
+
+  def success
+    @order = Order.find(params[:id])
+    if @order.update(status: 'paid')
+      flash[:notice] = "Order successfully paid!"
+    else
+      flash[:alert] = "There was an issue updating the order status."
+    end
+    redirect_to @order
+  end
+
+  def cancel
+    @order = Order.find(params[:id])
+    if @order.update(status: 'canceled')
+      flash[:alert] = "Order payment was canceled."
+    else
+      flash[:alert] = "There was an issue updating the order status."
+    end
+    redirect_to new_order_path
   end
 
   def update_customer_info

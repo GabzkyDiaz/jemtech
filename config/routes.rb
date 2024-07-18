@@ -32,6 +32,10 @@ Rails.application.routes.draw do
     collection do
       patch :update_customer_info
     end
+    member do
+      get :success
+      get :cancel
+    end
   end
 
   # Route for customer orders
