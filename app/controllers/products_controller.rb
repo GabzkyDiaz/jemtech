@@ -11,13 +11,8 @@ class ProductsController < ApplicationController
     end
 
     if params[:categories].present?
-      category_ids = params[:categories].split(',')
-      @products = @products.joins(:tags).where(tags: { id: category_ids })
-    end
-
-    if params[:category].present?
-      category_tag = Tag.find_by(name: params[:category])
-      @products = @products.joins(:tags).where(tags: { id: category_tag.id }) if category_tag
+      category_ids = params[:categories]
+      @products = @products.where(category_id: category_ids)
     end
 
     if params[:updated] == 'recently_updated'
@@ -42,9 +37,9 @@ class ProductsController < ApplicationController
   end
 
   def search
-    @category_tag = Tag.find_by(id: params[:category]) if params[:category].present?
-    @products = if @category_tag
-                  Product.joins(:tags).where(tags: { id: @category_tag.id }).where("products.name LIKE ? OR products.description LIKE ?", "%#{params[:keyword]}%", "%#{params[:keyword]}%")
+    @tag = Tag.find_by(id: params[:category]) if params[:category].present?
+    @products = if @tag
+                  Product.joins(:tags).where(tags: { id: @tag.id }).where("products.name LIKE ? OR products.description LIKE ?", "%#{params[:keyword]}%", "%#{params[:keyword]}%")
                 else
                   Product.where("name LIKE ? OR description LIKE ?", "%#{params[:keyword]}%", "%#{params[:keyword]}%")
                 end

@@ -22,8 +22,7 @@
         <div class="space-y-2">
           <% @categories.each do |category| %>
             <label class="flex items-center">
-              <%# Ensure checkbox is checked if category is present in params %>
-              <%= check_box_tag 'categories[]', category.id, params[:categories]&.include?(category.id.to_s) || (params[:category] == category.name), class: 'form-checkbox custom-checkbox', onchange: 'document.getElementById("category-filter-form").submit();' %>
+              <%= check_box_tag 'categories[]', category.id, params[:categories]&.include?(category.id.to_s), class: 'form-checkbox custom-checkbox', onchange: 'document.getElementById("category-filter-form").submit();' %>
               <span class="ml-2"><%= category.name %></span>
             </label>
           <% end %>

@@ -58,8 +58,8 @@
               x-transition:leave-start="opacity-100 scale-100"
               x-transition:leave-end="opacity-0 scale-90"
             >
-              <li><a href="<%= products_path(category: 'Desktop Systems') %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Desktop Systems</a></li>
-              <li><a href="<%= products_path(category: 'Laptops / Notebooks') %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Laptops / Notebooks</a></li>
+              <li><a href="<%= products_path(categories: [Category.find_by(name: 'Desktop Systems').id]) %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Desktop Systems</a></li>
+              <li><a href="<%= products_path(categories: [Category.find_by(name: 'Laptops / Notebooks').id]) %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Laptops / Notebooks</a></li>
             </ul>
           </li>
           <li class="relative group" x-data="{ open: false }">
@@ -79,8 +79,8 @@
               x-transition:leave-start="opacity-100 scale-100"
               x-transition:leave-end="opacity-0 scale-90"
             >
-              <li><a href="<%= products_path(category: 'Gaming Monitors') %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Gaming Monitors</a></li>
-              <li><a href="<%= products_path(category: 'Keyboards & Mice') %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Keyboards & Mice</a></li>
+              <li><a href="<%= products_path(categories: [Category.find_by(name: 'Gaming Monitors').id]) %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Gaming Monitors</a></li>
+              <li><a href="<%= products_path(categories: [Category.find_by(name: 'Keyboards & Mice').id]) %>" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Keyboards & Mice</a></li>
             </ul>
           </li>
           <li><a href="<%= products_path %>" class="hover:text-secondary font-semibold">Shop</a></li>
@@ -129,6 +129,7 @@
             <% if @categories %>
               <%= select_tag :category, options_from_collection_for_select(@categories, :id, :name, params[:category]), include_blank: "All Products", class: "p-2 border border-gray-300 rounded", style: "padding: 10px; margin-right: 10px;" %>
             <% end %>
+            <%= submit_tag 'Search', class: 'hidden' %>
           <% end %>
         </div>
       </div>
