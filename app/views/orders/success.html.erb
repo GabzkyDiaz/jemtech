@@ -1,7 +1,18 @@
 <!-- app/views/orders/success.html.erb -->
 <div class="container mx-auto py-8">
-  <h2 class="text-2xl font-semibold mb-6">Payment Successful</h2>
-  <p>Thank you for your purchase! Your order has been successfully processed.</p>
-  <%= link_to 'View Order History', customer_orders_path, class: 'bg-primary text-white py-2 px-4 rounded-full' %>
-  <%= link_to 'Continue Shopping', root_path, class: 'bg-primary text-white py-2 px-4 rounded-full' %>
+  <div class="flex max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="w-1/2 p-4 border-r border-gray-200">
+      <h2 class="text-2xl font-semibold mb-6">Payment Successful</h2>
+      <p>Thank you for your purchase! Your order has been successfully processed.</p>
+      <div class="mt-4">
+        <%= link_to 'View Order History', customer_orders_path, class: 'bg-primary text-white py-2 px-4 rounded-full' %>
+      </div>
+      <div class="mt-4">
+        <%= link_to 'Continue Shopping', root_path, class: 'bg-primary text-white py-2 px-4 rounded-full' %>
+      </div>
+    </div>
+    <div class="w-1/2 p-4 flex items-center justify-center">
+      <img src="<%= asset_path('success.jpg') %>" alt="Success Image" class="max-w-full h-auto rounded-lg shadow-md">
+    </div>
+  </div>
 </div>

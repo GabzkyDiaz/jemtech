@@ -170,6 +170,7 @@
           <h3 class="text-lg font-semibold mb-4">Account</h3>
           <ul>
             <li><a href="/cart.html" class="hover:text-primary">Cart</a></li>
+            <li><a href="/customer/orders" class="hover:text-primary">Order History</a></li>
             <% if customer_signed_in? %>
               <li><a href="#" class="hover:text-primary"><%= current_customer.email %></a></li>
               <li><a href="<%= destroy_customer_session_path %>" data-method="delete" class="hover:text-primary">Logout</a></li>
