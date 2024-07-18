@@ -12,21 +12,32 @@ ActiveAdmin.register_page "Dashboard" do
 
     columns do
       column do
-        panel "Recent Orders" do
-          table_for Order.order('created_at desc').limit(10) do
-            column("ID") { |order| link_to order.id, admin_order_path(order) }
-            column("Customer") { |order| order.customer.email }
+        panel "All Past Orders" do
+          table_for Order.order('created_at desc') do
+            column("Order ID") { |order| link_to order.id, admin_order_path(order) }
+            column("Customer Email") { |order| order.customer.email }
+            column("Customer Name") { |order| "#{order.customer.first_name} #{order.customer.last_name}" }
             column("Date", :order_date)
             column("Status", :status)
             column("Total Amount") { |order| number_to_currency order.total_amount }
+            column("Products Ordered") do |order|
+              ul do
+                order.order_items.each do |item|
+                  li "#{item.product.name} (x#{item.quantity})"
+                end
+              end
+            end
+            column("Taxes") do |order|
+              ul do
+                li "GST: #{number_to_currency(order.gst_amount)}"
+                li "PST: #{number_to_currency(order.pst_amount)}"
+                li "HST: #{number_to_currency(order.hst_amount)}"
+                li "QST: #{number_to_currency(order.qst_amount)}"
+              end
+            end
+            column("Grand Total") { |order| number_to_currency(order.total_amount) }
           end
           strong { link_to "View All Orders", admin_orders_path }
-        end
-      end
-
-      column do
-        panel "Info" do
-          para "Welcome to ActiveAdmin."
         end
       end
     end
