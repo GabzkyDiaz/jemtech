@@ -1,7 +1,7 @@
 # app/admin/orders.rb
 ActiveAdmin.register Order do
   permit_params :customer_id, :order_date, :status, :total_amount, :gst_rate, :pst_rate, :hst_rate, :qst_rate,
-                order_items_attributes: [:id, :order_id, :product_id, :quantity, :price, :_destroy]
+                :stripe_payment_id, order_items_attributes: [:id, :order_id, :product_id, :quantity, :price, :_destroy]
 
   index do
     selectable_column
@@ -10,6 +10,7 @@ ActiveAdmin.register Order do
     column :order_date
     column :status
     column :total_amount
+    column :stripe_payment_id
     actions
   end
 
@@ -39,7 +40,7 @@ ActiveAdmin.register Order do
     f.inputs do
       f.input :customer
       f.input :order_date
-      f.input :status
+      f.input :status, as: :select, collection: Order.statuses.keys
       f.input :total_amount
       f.input :gst_rate
       f.input :pst_rate
@@ -59,7 +60,7 @@ ActiveAdmin.register Order do
 
   filter :customer
   filter :order_date
-  filter :status
+  filter :status, as: :select, collection: Order.statuses.keys
   filter :total_amount
   filter :stripe_payment_id, as: :string
 end

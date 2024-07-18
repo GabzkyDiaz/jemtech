@@ -1,11 +1,10 @@
-# app/services/stripe_payment_service.rb
 class StripePaymentService
   def initialize(order)
     @order = order
   end
 
   def create_checkout_session
-    Stripe::Checkout::Session.create({
+    session = Stripe::Checkout::Session.create({
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
@@ -21,5 +20,7 @@ class StripePaymentService
       success_url: "#{Rails.application.routes.url_helpers.success_order_url(@order)}",
       cancel_url: "#{Rails.application.routes.url_helpers.cancel_order_url(@order)}",
     })
+    @order.update(stripe_payment_id: session.payment_intent)
+    session
   end
 end

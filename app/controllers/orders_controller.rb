@@ -1,4 +1,3 @@
-# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
   before_action :authenticate_customer!
   before_action :set_cart, only: [:new, :create, :update_customer_info]
@@ -23,7 +22,6 @@ class OrdersController < ApplicationController
   def create
     @order = current_customer.orders.build(order_params)
     if @order.save && update_customer_info
-      @order.update(status: 'pending', stripe_payment_id: params[:session_id])
       redirect_to @order, notice: 'Order created successfully.'
     else
       render :new
@@ -36,7 +34,8 @@ class OrdersController < ApplicationController
 
   def success
     @order = Order.find(params[:id])
-    if @order.update(status: 'paid')
+    if @order.update(status: 'paid', order_date: Time.current)
+      @order.customer.current_cart.cart_items.destroy_all
       flash[:notice] = "Order successfully paid!"
     else
       flash[:alert] = "There was an issue updating the order status."

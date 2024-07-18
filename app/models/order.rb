@@ -1,4 +1,3 @@
-# app/models/order.rb
 class Order < ApplicationRecord
   belongs_to :customer
   has_many :order_items, dependent: :destroy
@@ -9,7 +8,7 @@ class Order < ApplicationRecord
   validates :customer_id, :order_date, :status, :total_amount, presence: true
   validates :total_amount, :gst_rate, :pst_rate, :hst_rate, :qst_rate, numericality: true
 
-  enum status: { pending: 'pending', paid: 'paid', shipped: 'shipped' }
+  enum status: { pending: 'pending', paid: 'paid', shipped: 'shipped', canceled: 'canceled' }
 
   after_initialize :set_default_status, if: :new_record?
 

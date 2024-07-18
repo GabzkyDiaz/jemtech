@@ -1,4 +1,3 @@
-# app/controllers/stripe_webhooks_controller.rb
 class StripeWebhooksController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -17,12 +16,34 @@ class StripeWebhooksController < ApplicationController
     end
 
     case event['type']
+    when 'checkout.session.completed'
+      session = event['data']['object']
+      handle_checkout_session(session)
     when 'payment_intent.succeeded'
       payment_intent = event['data']['object']
-      order = Order.find_by(stripe_payment_id: payment_intent['id'])
-      order.update(status: 'paid') if order
+      handle_payment_intent(payment_intent)
+    else
+      puts "Unhandled event type: #{event['type']}"
     end
 
     render json: { message: 'success' }, status: 200
+  end
+
+  private
+
+  def handle_checkout_session(session)
+    order = Order.find_by(stripe_payment_id: session.payment_intent)
+    if order
+      order.update(status: 'paid', order_date: Time.current)
+      order.customer.current_cart.cart_items.destroy_all
+    end
+  end
+
+  def handle_payment_intent(payment_intent)
+    order = Order.find_by(stripe_payment_id: payment_intent.id)
+    if order
+      order.update(status: 'paid', order_date: Time.current)
+      order.customer.current_cart.cart_items.destroy_all
+    end
   end
 end
