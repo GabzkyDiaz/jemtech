@@ -1,6 +1,29 @@
 ActiveAdmin.register Customer do
   permit_params :email, :first_name, :last_name, :address, :city, :province_id, :zip_code, :country, :phone, :password, :password_confirmation
 
+  index do
+    selectable_column
+    id_column
+    column :email
+    column :first_name
+    column :last_name
+    column :phone
+    column :address
+    column :city
+    column :province
+    column :zip_code
+    column :country
+    column :created_at
+    column :updated_at
+    column :encrypted_password do |customer|
+      customer.encrypted_password
+    end
+    column :password_salt do |customer|
+      customer.encrypted_password[0,29] if customer.encrypted_password.present?
+    end
+    actions
+  end
+
   form do |f|
     f.inputs "Customer Details" do
       f.input :email
@@ -35,6 +58,27 @@ ActiveAdmin.register Customer do
       end
       row :created_at
       row :updated_at
+      row :encrypted_password do |customer|
+        customer.encrypted_password
+      end
+      row :password_salt do |customer|
+        customer.encrypted_password[0,29] if customer.encrypted_password.present?
+      end
+    end
+  end
+
+  controller do
+    def find_resource
+      scoped_collection.find(params[:id])
+    end
+
+    def destroy
+      resource.destroy
+      flash[:notice] = "Customer was successfully deleted."
+      redirect_to admin_customers_path
+    rescue ActiveRecord::InvalidForeignKey => e
+      flash[:error] = "Cannot delete customer with associated records. Please delete associated records first."
+      redirect_to admin_customers_path
     end
   end
 end

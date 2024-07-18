@@ -1,7 +1,7 @@
 class Customer < ApplicationRecord
   belongs_to :province
-  has_many :orders
-  has_many :carts
+  has_many :orders, dependent: :destroy
+  has_many :carts, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
