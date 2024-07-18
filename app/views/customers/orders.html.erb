@@ -1,3 +1,4 @@
+<!-- app/views/customers/orders.html.erb -->
 <div class="container mx-auto py-8">
   <h2 class="text-2xl font-semibold mb-6">Your Orders</h2>
   <% @orders.each do |order| %>
@@ -5,14 +6,15 @@
       <h3 class="text-xl font-semibold">Order <%= order.id %></h3>
       <p>Order Date: <%= order.order_date %></p>
       <p>Status: <%= order.status %></p>
-      <p>Total Amount: $<%= order.total_amount %></p>
+      <p>Total Amount: <%= number_to_currency(order.total_amount) %></p>
       <h4 class="text-lg font-semibold mt-4">Items:</h4>
       <% order.order_items.each do |item| %>
         <div class="flex justify-between">
           <p><%= item.product.name %> (x<%= item.quantity %>)</p>
-          <p>$<%= item.price %></p>
+          <p><%= number_to_currency(item.price) %></p>
         </div>
       <% end %>
+      <%= link_to 'View Order Details', order_path(order), class: 'bg-primary text-white py-2 px-4 rounded-full mt-4' %>
     </div>
   <% end %>
 </div>

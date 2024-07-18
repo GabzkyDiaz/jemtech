@@ -1,4 +1,113 @@
 <div>
-  <h1 class="font-bold text-4xl">Orders#show</h1>
-  <p>Find me in app/views/orders/show.html.erb</p>
+  <h1 class="font-bold text-4xl">Order Details</h1>
+  <p>Order ID: <%= @order.id %></p>
+  <p>Order Date: <%= @order.order_date %></p>
+  <p>Status: <%= @order.status.capitalize %></p>
 </div>
+
+<section id="order-page" class="bg-white py-16">
+  <div class="container mx-auto px-4">
+    <h1 class="text-2xl font-semibold mb-4">Order Summary</h1>
+    <div class="flex flex-col md:flex-row gap-4">
+      <div class="md:w-3/4">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-4">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr>
+                  <th class="text-center md:text-left font-semibold">Product</th>
+                  <th class="text-center font-semibold">Price</th>
+                  <th class="text-center font-semibold">Quantity</th>
+                  <th class="text-center md:text-right font-semibold">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @order.order_items.each do |item| %>
+                <tr class="pb-4 border-b border-gray-line">
+                  <td class="px-1 py-4">
+                    <div class="flex items-center flex-col sm:flex-row text-center sm:text-left">
+                      <%= image_tag item.product.image_url, class: "h-16 w-16 md:h-24 md:w-24 sm:mr-8 mb-4 sm:mb-0" %>
+                      <p class="text-sm md:text-base md:font-semibold"><%= item.product.name %></p>
+                    </div>
+                  </td>
+                  <td class="px-1 py-4 text-center"><%= number_to_currency(item.price) %></td>
+                  <td class="px-1 py-4 text-center"><%= item.quantity %></td>
+                  <td class="px-1 py-4 text-right"><%= number_to_currency(item.price * item.quantity) %></td>
+                </tr>
+                <% end %>
+              </tbody>
+            </table>
+            <div class="px-1 flex flex-col lg:flex-row justify-between items-center mt-10">
+              <div class="mt-4 lg:mt-0 flex space-x-2">
+                <%= link_to 'Back to Orders', orders_path, class: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary rounded-full py-2 px-4" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="md:w-1/4">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-lg font-semibold mb-4">Order Summary</h2>
+          <div class="flex justify-between mb-4">
+            <p>Subtotal</p>
+            <p><%= number_to_currency(@order.subtotal) %></p>
+          </div>
+          <div class="flex justify-between mb-4">
+            <p>Taxes</p>
+            <p><%= number_to_currency(@order.gst_amount + @order.pst_amount + @order.hst_amount + @order.qst_amount) %></p>
+          </div>
+          <div class="flex flex-col mb-4">
+            <% @order.tax_breakdown.each do |tax_name, amount| %>
+              <div class="flex justify-between">
+                <p><%= tax_name %></p>
+                <p><%= number_to_currency(amount) %></p>
+              </div>
+            <% end %>
+          </div>
+          <div class="flex justify-between mb-4 pb-4 border-b border-gray-line">
+            <p>Shipping</p>
+            <p>$0.00</p>
+          </div>
+          <div class="flex justify-between mb-2">
+            <p class="font-semibold">Total</p>
+            <p class="font-semibold"><%= number_to_currency(@order.total_amount) %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="order-history" class="bg-white py-16">
+  <div class="container mx-auto px-4">
+    <h1 class="text-2xl font-semibold mb-4">Order History</h1>
+    <div class="bg-white rounded-lg shadow-md p-6 mb-4">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-center font-semibold">Order ID</th>
+              <th class="text-center font-semibold">Date</th>
+              <th class="text-center font-semibold">Status</th>
+              <th class="text-center font-semibold">Total</th>
+              <th class="text-center font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @customer_orders.each do |order| %>
+            <tr class="pb-4 border-b border-gray-line">
+              <td class="px-1 py-4 text-center"><%= order.id %></td>
+              <td class="px-1 py-4 text-center"><%= order.order_date %></td>
+              <td class="px-1 py-4 text-center"><%= order.status.capitalize %></td>
+              <td class="px-1 py-4 text-center"><%= number_to_currency(order.total_amount) %></td>
+              <td class="px-1 py-4 text-center">
+                <%= link_to 'View', order_path(order), class: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary rounded-full py-2 px-4" %>
+              </td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
