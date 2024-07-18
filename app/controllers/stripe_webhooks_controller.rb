@@ -32,9 +32,9 @@ class StripeWebhooksController < ApplicationController
   private
 
   def handle_checkout_session(session)
-    order = Order.find_by(stripe_payment_id: session.payment_intent)
+    order = Order.find_by(id: session.metadata.order_id)
     if order
-      order.update(status: 'paid', order_date: Time.current)
+      order.update(stripe_payment_id: session.payment_intent, status: 'paid', order_date: Time.current)
       order.customer.current_cart.cart_items.destroy_all
     end
   end

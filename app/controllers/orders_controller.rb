@@ -1,3 +1,4 @@
+# app/controllers/orders_controller.rb
 class OrdersController < ApplicationController
   before_action :authenticate_customer!
   before_action :set_cart, only: [:new, :create, :update_customer_info]

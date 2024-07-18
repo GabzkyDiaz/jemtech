@@ -19,6 +19,9 @@ class StripePaymentService
       mode: 'payment',
       success_url: "#{Rails.application.routes.url_helpers.success_order_url(@order)}",
       cancel_url: "#{Rails.application.routes.url_helpers.cancel_order_url(@order)}",
+      metadata: {
+        order_id: @order.id
+      }
     })
     @order.update(stripe_payment_id: session.payment_intent)
     session
