@@ -3,8 +3,8 @@ class OrdersController < ApplicationController
   before_action :set_cart, only: [:new, :create, :update_customer_info]
 
   def new
-    @order = current_customer.orders.build
-    build_order_from_cart(@order, @cart)
+    @order = current_customer.orders.find_by(status: 'pending') || current_customer.orders.build
+    update_order_from_cart(@order, @cart)
 
     if @order.total_amount >= minimum_amount_in_cents / 100.0
       @order.save(validate: false) # Save without validation to calculate total_amount
@@ -20,7 +20,8 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = current_customer.orders.build(order_params)
+    @order = current_customer.orders.find_by(status: 'pending') || current_customer.orders.build(order_params)
+    update_order_from_cart(@order, @cart)
     if @order.save && update_customer_info
       redirect_to success_order_path(@order), notice: 'Order created successfully.'
     else
@@ -57,8 +58,8 @@ class OrdersController < ApplicationController
 
   def update_customer_info
     if current_customer.update(customer_params)
-      @order = current_customer.orders.build
-      build_order_from_cart(@order, @cart)
+      @order = current_customer.orders.find_by(status: 'pending') || current_customer.orders.build
+      update_order_from_cart(@order, @cart)
       respond_to do |format|
         format.html { redirect_to new_order_path, notice: 'Customer information updated.' }
         format.json { render json: tax_breakdown_json(@order) }
@@ -85,7 +86,8 @@ class OrdersController < ApplicationController
     params.require(:customer).permit(:address, :city, :province_id, :zip_code, :country, :phone)
   end
 
-  def build_order_from_cart(order, cart)
+  def update_order_from_cart(order, cart)
+    order.order_items.destroy_all # Clear existing order items to update with current cart items
     cart.cart_items.each do |cart_item|
       order.order_items.build(product_id: cart_item.product_id, quantity: cart_item.quantity, price: cart_item.product.price)
     end
