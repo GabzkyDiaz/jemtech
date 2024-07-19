@@ -4,7 +4,7 @@
       <div class="w-full lg:w-1/2">
         <div class="grid gap-4">
           <div id="main-image-container">
-            <%= image_tag @product.image_url.present? ? @product.image_url : '/assets/defaultimage.png', id: 'main-image', class: 'h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]' %>
+            <%= image_tag @product.main_image.attached? ? url_for(@product.main_image) : (@product.image_url.present? ? @product.image_url : '/assets/defaultimage.png'), id: 'main-image', class: 'h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]' %>
           </div>
           <div class="grid grid-cols-5 gap-4">
             <% @product.products_galleries.each do |gallery| %>

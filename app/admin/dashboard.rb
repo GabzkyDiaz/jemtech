@@ -3,6 +3,20 @@ ActiveAdmin.register_page "Dashboard" do
   menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
 
   content title: proc { I18n.t("active_admin.dashboard") } do
+    # Calculate the total number of orders and total amount for orders with status 'paid' and 'shipped'
+    total_orders = Order.where(status: ['paid', 'shipped']).count
+    total_amount = Order.where(status: ['paid', 'shipped']).sum(:total_amount)
+
+    # Display the calculated totals at the top of the dashboard
+    panel "Order Statistics" do
+      div do
+        h3 "Total Number of Orders: #{total_orders}"
+      end
+      div do
+        h3 "Total Amount from Orders: #{number_to_currency(total_amount)}"
+      end
+    end
+
     div class: "blank_slate_container", id: "dashboard_default_message" do
       span class: "blank_slate" do
         span I18n.t("active_admin.dashboard_welcome.welcome")
