@@ -84,3 +84,5 @@ gem 'country_select', '~> 9.0'
 gem 'rails-ujs', '5.1.0.beta1'
 
 gem 'stripe', '~> 12.2'
+
+gem 'open-uri', '~> 0.3.0'

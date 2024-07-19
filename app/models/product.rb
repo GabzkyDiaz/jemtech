@@ -2,9 +2,12 @@ class Product < ApplicationRecord
   belongs_to :category
   has_many :order_items
   has_many :cart_items
-  has_many :products_galleries
+  has_many :products_galleries, dependent: :destroy
   has_many :product_tags
   has_many :tags, through: :product_tags
+
+  has_one_attached :main_image
+  has_many_attached :gallery_images
 
   scope :on_sale, -> { joins(:tags).where(tags: { name: 'on_sale' }) }
   scope :recently_updated, -> { where('updated_at >= ?', 3.days.ago) }
